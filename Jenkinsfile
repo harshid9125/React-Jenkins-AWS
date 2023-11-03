@@ -30,8 +30,8 @@ pipeline {
         stage('Pre-build') {
         when { expression {  params.action == 'create' } }
             steps {
-                bat 'echo Installing source NPM dependencies...'
-                bat 'del package-lock.json && npm install'
+                sh 'echo Installing source NPM dependencies...'
+                sh 'del package-lock.json && npm install'
             }
         }
 
