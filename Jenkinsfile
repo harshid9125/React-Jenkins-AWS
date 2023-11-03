@@ -31,7 +31,7 @@ pipeline {
         when { expression {  params.action == 'create' } }
             steps {
                 sh 'echo Installing source NPM dependencies...'
-                sh 'del package-lock.json && npm install'
+                sh 'npm install'
             }
         }
 
