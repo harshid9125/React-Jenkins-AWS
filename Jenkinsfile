@@ -38,8 +38,8 @@ pipeline {
         stage('Build') {
         when { expression {  params.action == 'create' } }
             steps {
-                bat 'echo Build started on `date`'
-                bat 'npm run build'
+                sh 'echo Build started on `date`'
+                sh 'npm run build'
             }
         }
 
