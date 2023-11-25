@@ -30,16 +30,16 @@ pipeline {
         stage('Pre-build') {
         when { expression {  params.action == 'create' } }
             steps {
-                sh 'echo Installing source NPM dependencies...'
-                sh 'npm install'
+                bat 'echo Installing source NPM dependencies...'
+                bat 'npm install'
             }
         }
 
         stage('Build') {
         when { expression {  params.action == 'create' } }
             steps {
-                sh 'echo Build started on `date`'
-                sh 'npm run build'
+                bat 'echo Build started on `date`'
+                bat 'npm run build'
             }
         }
 
