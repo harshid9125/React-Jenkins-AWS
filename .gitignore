@@ -27,3 +27,5 @@ yarn-error.log*
 .terraform.tfstate
 .terraform.lock.hcl
 .terraform.tfstate.lock.info
+.package-lock.json
+.terraform.lock.hcl
