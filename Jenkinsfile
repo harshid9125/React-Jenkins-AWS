@@ -69,5 +69,18 @@ pipeline {
                }
             }
         }
+
+        stage('Creating Cluster : Terraform '){
+        when { expression {  params.action == 'create' } }
+            steps{
+               script{
+                   bat """
+                       terraform init
+                       terraform plan
+                       terraform apply --auto-approve
+                   """
+               }
+            }
+        }
     }
 }
