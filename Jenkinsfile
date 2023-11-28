@@ -94,11 +94,15 @@ pipeline {
                    def apply = false
 
                    try{
-                    input message = 'please confirm to deploy on eks', ok: ' Ready to apply the config ?'
+                    input message = 'please confirm to deploy on eks', ok: 'Ready to apply the config ?'
                     apply = true 
                    }
                    catch(err){
                     apply = false
+
+                    bat """
+                    echo ${err}
+                    """
                     currentBuild.result = 'UNSTABLE'
                    }
                     if(apply){
