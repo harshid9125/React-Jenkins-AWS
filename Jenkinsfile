@@ -8,6 +8,7 @@ pipeline {
         string(name: 'aws_account_id', description: " AWS Account ID", defaultValue: '988320610889')
         string(name: 'Region', description: "Region of ECR", defaultValue: 'us-east-1')
         string(name: 'ECR_REPO_NAME', description: "name of the ECR", defaultValue: 'react')
+        string(name: 'Cluster', description: "name of the EKS Cluster", defaultValue: 'ed-eks-01')
     }
 
     environment{
@@ -79,6 +80,32 @@ pipeline {
                        terraform plan
                        terraform apply --auto-approve
                    """
+               }
+            }
+        }
+
+        stage('Deployment: AWS-EKS'){
+        when { expression {  params.action == 'create' } }
+        steps{
+               script{
+                   bat """
+                       aws eks update-kubeconfig --name ${params.Cluster} --region ${params.Region}
+                   """
+                   def apply = false
+
+                   try{
+                    input message = 'please confirm to deploy on eks', ok: ' Ready to apply the config ?'
+                    apply = true 
+                   }
+                   catch(err){
+                    apply = false
+                    currentBuild.result = 'UNSTABLE'
+                   }
+                    if(apply){
+                        bat"""
+                           kubectl apply -f deployment.yaml
+                        """
+                    }
                }
             }
         }
