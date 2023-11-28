@@ -28,48 +28,48 @@ pipeline {
                  }
         }
 
-        stage('Pre-build') {
-        when { expression {  params.action == 'create' } }
-            steps {
-                bat 'echo Installing source NPM dependencies...'
-                bat 'npm install'
-            }
-        }
+        // stage('Pre-build') {
+        // when { expression {  params.action == 'create' } }
+        //     steps {
+        //         bat 'echo Installing source NPM dependencies...'
+        //         bat 'npm install'
+        //     }
+        // }
 
-        stage('Build') {
-        when { expression {  params.action == 'create' } }
-            steps {
-                bat 'echo Build started on `date`'
-                bat 'npm run build'
-            }
-        }
+        // stage('Build') {
+        // when { expression {  params.action == 'create' } }
+        //     steps {
+        //         bat 'echo Build started on `date`'
+        //         bat 'npm run build'
+        //     }
+        // }
 
-        stage('Docker Image Build : ECR'){
-        when { expression {  params.action == 'create' } }
-            steps{
-               script{
-                   dockerBuild("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}")
-               }
-            }
-        }
+        // stage('Docker Image Build : ECR'){
+        // when { expression {  params.action == 'create' } }
+        //     steps{
+        //        script{
+        //            dockerBuild("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}")
+        //        }
+        //     }
+        // }
 
-        stage('Docker Image Push : ECR'){
-        when { expression {  params.action == 'create' } }
-            steps{
-               script{
-                   dockerImagePush("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}","${ACCESS_KEY}", "${SECRET_KEY}")
-               }
-            }
-        }
+        // stage('Docker Image Push : ECR'){
+        // when { expression {  params.action == 'create' } }
+        //     steps{
+        //        script{
+        //            dockerImagePush("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}","${ACCESS_KEY}", "${SECRET_KEY}")
+        //        }
+        //     }
+        // }
 
-        stage('Docker Image Cleanup : ECR '){
-        when { expression {  params.action == 'create' } }
-            steps{
-               script{
-                   dockerImageCleanup("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}")
-               }
-            }
-        }
+        // stage('Docker Image Cleanup : ECR '){
+        // when { expression {  params.action == 'create' } }
+        //     steps{
+        //        script{
+        //            dockerImageCleanup("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}")
+        //        }
+        //     }
+        // }
 
         // stage('Creating Cluster : Terraform '){
         // when { expression {  params.action == 'create' } }
@@ -90,28 +90,10 @@ pipeline {
                script{
                    bat """
                        aws eks update-kubeconfig --name ${params.Cluster} --region ${params.Region}
+                       kubectl apply -f deployment.yaml
                    """
-                   def apply = false
-
-                   try{
-                    input message = 'please confirm to deploy on eks', ok: 'Ready to apply the config ?'
-                    apply = true 
-                   }
-                   catch(err){
-                    apply = false
-
-                    bat """
-                    echo ${err}
-                    """
-                    currentBuild.result = 'UNSTABLE'
-                   }
-                    if(apply){
-                        bat"""
-                           kubectl apply -f deployment.yaml
-                        """
                     }
                }
             }
-        }
     }
 }
