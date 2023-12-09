@@ -114,6 +114,14 @@ resource "aws_security_group" "alb_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+    ingress {
+    description = "React Project from VPC"
+    from_port   = 30080
+    to_port     = 30080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   ingress {
     description = "MySQL from VPC"
     from_port   = 3306
