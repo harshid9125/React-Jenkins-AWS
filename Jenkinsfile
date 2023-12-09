@@ -26,10 +26,6 @@ pipeline {
                         url: "https://github.com/harshid9125/React-Jenkins-AWS.git"
                      )
                  }
-        when { expression {  params.action == 'delete' } }
-            steps{
-                bat 'terraform destroy -auto-approve'
-            }
         }
 
         stage('Pre-build') {
