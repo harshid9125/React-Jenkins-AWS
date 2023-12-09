@@ -28,61 +28,61 @@ pipeline {
                  }
         }
 
-        // stage('Pre-build') {
-        // when { expression {  params.action == 'create' } }
-        //     steps {
-        //         bat 'echo Installing source NPM dependencies...'
-        //         bat 'npm install'
-        //     }
-        // }
+        stage('Pre-build') {
+        when { expression {  params.action == 'create' } }
+            steps {
+                bat 'echo Installing source NPM dependencies...'
+                bat 'npm install'
+            }
+        }
 
-        // stage('Build') {
-        // when { expression {  params.action == 'create' } }
-        //     steps {
-        //         bat 'echo Build started on `date`'
-        //         bat 'npm run build'
-        //     }
-        // }
+        stage('Build') {
+        when { expression {  params.action == 'create' } }
+            steps {
+                bat 'echo Build started on `date`'
+                bat 'npm run build'
+            }
+        }
 
-        // stage('Docker Image Build : ECR'){
-        // when { expression {  params.action == 'create' } }
-        //     steps{
-        //        script{
-        //            dockerBuild("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}")
-        //        }
-        //     }
-        // }
+        stage('Docker Image Build : ECR'){
+        when { expression {  params.action == 'create' } }
+            steps{
+               script{
+                   dockerBuild("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}")
+               }
+            }
+        }
 
-        // stage('Docker Image Push : ECR'){
-        // when { expression {  params.action == 'create' } }
-        //     steps{
-        //        script{
-        //            dockerImagePush("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}","${ACCESS_KEY}", "${SECRET_KEY}")
-        //        }
-        //     }
-        // }
+        stage('Docker Image Push : ECR'){
+        when { expression {  params.action == 'create' } }
+            steps{
+               script{
+                   dockerImagePush("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}","${ACCESS_KEY}", "${SECRET_KEY}")
+               }
+            }
+        }
 
-        // stage('Docker Image Cleanup : ECR '){
-        // when { expression {  params.action == 'create' } }
-        //     steps{
-        //        script{
-        //            dockerImageCleanup("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}")
-        //        }
-        //     }
-        // }
+        stage('Docker Image Cleanup : ECR '){
+        when { expression {  params.action == 'create' } }
+            steps{
+               script{
+                   dockerImageCleanup("${params.aws_account_id}","${params.Region}","${params.ECR_REPO_NAME}")
+               }
+            }
+        }
 
-        // stage('Creating Cluster : Terraform '){
-        // when { expression {  params.action == 'create' } }
-        //     steps{
-        //        script{
-        //            bat """
-        //                terraform init
-        //                terraform plan
-        //                terraform apply --auto-approve
-        //            """
-        //        }
-        //     }
-        // }
+        stage('Creating Cluster : Terraform '){
+        when { expression {  params.action == 'create' } }
+            steps{
+               script{
+                   bat """
+                       terraform init
+                       terraform plan
+                       terraform apply --auto-approve
+                   """
+               }
+            }
+        }
 
         stage('Deployment: AWS-EKS'){
         when { expression {  params.action == 'create' } }
