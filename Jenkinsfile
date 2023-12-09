@@ -101,7 +101,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                       terraform detroy -auto-approve
+                       terraform destroy -auto-approve
                      """
                 }
             }
