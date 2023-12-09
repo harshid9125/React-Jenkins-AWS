@@ -95,5 +95,16 @@ pipeline {
                     }
                }
             }
+
+        stage('Delete Resources') {
+            when { expression { params.action == 'delete' } }
+            steps {
+                script {
+                    bat """
+                       terraform detroy -auto-approve
+                     """
+                }
+            }
+        }
     }
 }
